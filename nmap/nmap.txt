@@ -1,0 +1,125 @@
+# ==============================================================================
+# MASTER LIST: 100 COMANDOS NMAP PARA SEGURANÇA E REDES
+# Nota: No Termux/PRoot, adicione sempre '--unprivileged' se não tiver Root.
+# ==============================================================================
+
+# --- DESCOBERTA BÁSICA (SCAN DE REDE) ---
+1. nmap -sn 192.168.1.0/24                 # Localiza todos os IPs ativos na rede local
+2. nmap -sn 192.168.1.1-50                 # Scan de ping em um intervalo específico de IPs
+3. nmap -v 192.168.1.1                     # Scan simples com detalhes extras (verbose)
+4. nmap -iL lista_ips.txt                  # Escaneia alvos a partir de um arquivo de texto
+5. nmap --exclude 192.168.1.10 192.168.1.0/24 # Escaneia a rede, mas pula o IP .10
+6. nmap -PR 192.168.1.1                    # Descoberta usando ARP (mais rápido em LAN)
+7. nmap -sn --dns-servers 8.8.8.8 192.168.1.0/24 # Scan de rede usando DNS específico
+8. nmap -n 192.168.1.1                     # Desativa resolução reversa de DNS (mais rápido)
+9. nmap -R 192.168.1.1                     # Força resolução DNS de todos os alvos
+10. nmap -sn --packet-trace 192.168.1.1    # Mostra todos os pacotes enviados/recebidos
+
+# --- SCAN DE PORTAS ESPECÍFICAS ---
+11. nmap -p 80 192.168.1.1                 # Verifica apenas a porta 80 (HTTP)
+12. nmap -p 80,443,22 192.168.1.1          # Verifica portas HTTP, HTTPS e SSH
+13. nmap -p 1-1000 192.168.1.1             # Escaneia as primeiras mil portas
+14. nmap -p- 192.168.1.1                   # Escaneia todas as 65.535 portas existentes
+15. nmap -F 192.168.1.1                    # Scan rápido (apenas as 100 portas mais comuns)
+16. nmap -p T:80,U:53 192.168.1.1          # Porta 80 via TCP e 53 via UDP
+17. nmap --top-ports 20 192.168.1.1        # Escaneia as 20 portas mais usadas do mundo
+18. nmap -p http* 192.168.1.1              # Escaneia portas pelo nome do serviço (ex: http, https)
+19. nmap --open 192.168.1.0/24             # Mostra apenas os dispositivos que têm portas abertas
+20. nmap -p 445 --script smb-os-discovery 192.168.1.1 # Foca em SMB para descobrir Windows
+
+# --- DETECÇÃO DE SERVIÇOS E SO ---
+21. nmap -sV 192.168.1.1                   # Detecta versões dos softwares (Apache, nginx, etc)
+22. nmap -O 192.168.1.1                    # Tenta identificar o Sistema Operacional
+23. nmap -A 192.168.1.1                    # Scan Agressivo (SO, Versão, Scripts e Traceroute)
+24. nmap -sV --version-intensity 5 192.168.1.1 # Nível máximo de agressividade na detecção de versão
+25. nmap -sV --version-light 1 192.168.1.1 # Scan de versão leve (mais rápido)
+26. nmap -sC 192.168.1.1                   # Executa os scripts padrões (safe scripts) do Nmap
+27. nmap --traceroute 192.168.1.1          # Rastreia o caminho dos pacotes até o alvo
+28. nmap -sS -O 192.168.1.1                # Scan furtivo + Detecção de SO
+29. nmap -sV -p 22,80,443 192.168.1.1      # Versão apenas em portas críticas
+30. nmap -O --osscan-guess 192.168.1.1     # Força o Nmap a tentar adivinhar o SO se não tiver certeza
+
+# --- PERFORMANCE E TIMING ---
+31. nmap -T4 192.168.1.1                   # Scan agressivo de tempo (recomendado para LAN)
+32. nmap -T1 192.168.1.1                   # Scan muito lento para evitar Firewalls/IDS
+33. nmap --max-rtt-timeout 200ms 192.168.1.1 # Define tempo máximo de resposta por pacote
+34. nmap --min-rate 1000 192.168.1.1       # Envia no mínimo 1000 pacotes por segundo
+35. nmap --max-retries 1 192.168.1.1       # Tenta reconectar apenas 1 vez (ganha velocidade)
+36. nmap --host-timeout 10m 192.168.1.0/24 # Desiste de um IP se ele demorar mais de 10 min
+37. nmap -T5 192.168.1.1                   # Modo "insano" de velocidade (pode perder pacotes)
+38. nmap --min-parallelism 10 192.168.1.1  # Força o envio de 10 pacotes em paralelo
+39. nmap --scan-delay 5s 192.168.1.1       # Espera 5 segundos entre cada pacote (furtivo)
+40. nmap -T3 192.168.1.1                   # Modo normal (velocidade padrão)
+
+# --- EVASÃO DE FIREWALL E IDS ---
+41. nmap -f 192.168.1.1                    # Fragmenta pacotes (tenta passar por firewalls simples)
+42. nmap -mtu 24 192.168.1.1               # Define tamanho específico do MTU para evasão
+43. nmap -D RND:10 192.168.1.1             # Esconde seu IP usando 10 iscas (decoys) aleatórias
+44. nmap -S 1.2.3.4 192.168.1.1            # Spoofing: Mascara seu IP como se fosse 1.2.3.4
+45. nmap -g 53 192.168.1.1                 # Envia pacotes fingindo que saíram da porta 53 (DNS)
+46. nmap --data-length 25 192.168.1.1      # Adiciona dados inúteis aos pacotes para mudar o tamanho
+47. nmap --spoof-mac Apple 192.168.1.1     # Muda seu endereço MAC para parecer um dispositivo Apple
+48. nmap --badsum 192.168.1.1              # Envia pacotes com checksum errado (testa firewalls)
+49. nmap --adler32 192.168.1.1             # Usa algoritmo de checksum diferente
+50. nmap -sI isca_ip:80 192.168.1.1        # Scan Idle (usa um terceiro host para esconder você)
+
+# --- SCRIPTS (NSE - NMAP SCRIPTING ENGINE) ---
+51. nmap --script default 192.168.1.1      # Roda os scripts padrão de segurança
+52. nmap --script banner 192.168.1.1       # Tenta capturar o banner (apresentação) do serviço
+53. nmap --script vuln 192.168.1.1         # Procura vulnerabilidades conhecidas no alvo
+54. nmap --script auth 192.168.1.1         # Tenta testar autenticações comuns
+55. nmap --script brute 192.168.1.1        # Tenta força bruta em serviços ativos
+56. nmap --script discovery 192.168.1.1    # Tenta descobrir mais informações sobre a rede
+57. nmap --script http-enum 192.168.1.1    # Enumera diretórios em servidores web
+58. nmap --script dns-brute google.com     # Tenta descobrir subdomínios via força bruta
+59. nmap --script ssl-enum-ciphers 192.168.1.1 # Verifica certificados SSL e cifras fracas
+60. nmap --script ftp-anon 192.168.1.1     # Verifica se o FTP permite login anônimo
+
+# --- FORMATOS DE SAÍDA (LOGS) ---
+61. nmap -oN scan.txt 192.168.1.1          # Salva o resultado em formato de texto normal
+62. nmap -oX scan.xml 192.168.1.1          # Salva em formato XML (bom para importar em outras ferramentas)
+63. nmap -oG scan.grep 192.168.1.1         # Salva em formato "Grepable" (fácil de filtrar com comando grep)
+64. nmap -oA resumo 192.168.1.1            # Salva nos três formatos acima de uma vez
+65. nmap --append-output -oN scan.txt 192.168.1.1 # Adiciona o resultado ao final de um arquivo existente
+66. nmap -v -oN verbose_scan.txt 192.168.1.1 # Salva com detalhes extras no arquivo
+67. nmap --packet-trace -oN trace.txt 192.168.1.1 # Salva o rastro de pacotes
+68. nmap -sV -oX versao.xml 192.168.1.1    # Salva apenas scan de versão em XML
+69. nmap --iflist                          # Mostra as interfaces de rede e rotas (útil para debug)
+70. nmap --resume scan.txt                 # Retoma um scan que foi interrompido
+
+# --- SCANS AVANÇADOS / RAROS ---
+71. nmap -sA 192.168.1.1                   # Scan ACK: usado para mapear regras de firewall
+72. nmap -sW 192.168.1.1                   # Scan Window: examina o campo de janela TCP
+73. nmap -sM 192.168.1.1                   # Scan Maimon: técnica antiga para burlar BSD
+74. nmap -sN 192.168.1.1                   # Null Scan: envia pacote sem nenhuma flag TCP
+75. nmap -sF 192.168.1.1                   # FIN Scan: envia apenas a flag FIN
+76. nmap -sX 192.168.1.1                   # Xmas Scan: ativa flags FIN, PSH e URG (ilumina como árvore de natal)
+77. nmap --scanflags URGACKPSH 192.168.1.1 # Permite criar seu próprio tipo de pacote TCP
+78. nmap -sO 192.168.1.1                   # Scan de protocolos IP (vê se suporta ICMP, IGMP, etc)
+79. nmap -b servidor_proxy 192.168.1.1     # FTP Bounce scan (raro hoje em dia)
+80. nmap --reason 192.168.1.1              # Explica o porquê de uma porta estar aberta ou fechada
+
+# --- NMAP NO TERMUX / ANDROID (FOCO MOBILE) ---
+81. nmap --unprivileged -sn 192.168.1.0/24 # Scan de rede sem precisar de root no Android
+82. nmap --unprivileged -sT 192.168.1.1    # Scan TCP Connect (padrão para não-root)
+83. nmap -6 2001:db8::1                    # Escaneia um endereço IPv6
+84. nmap --top-ports 100 192.168.1.1       # Scan rápido das 100 portas principais no Wi-Fi
+85. nmap -sn 192.168.43.0/24               # Scan comum para quem usa Roteador Wi-Fi do Celular
+86. nmap -p 8080,8000,3000 127.0.0.1       # Testa servidores rodando localmente no Termux
+87. nmap --script http-title 192.168.1.0/24 # Mostra o título das páginas web encontradas na rede
+88. nmap -sV --allports 192.168.1.1        # Não pula portas "especiais" na detecção de versão
+89. nmap --version-trace 192.168.1.1       # Mostra detalhes da análise de versão (debug)
+90. nmap --script nbstat 192.168.1.1       # Descobre o nome NetBIOS (nome do PC Windows)
+
+# --- COMANDOS EXTREMOS / SEGURANÇA ---
+91. nmap --script ssl-heartbleed 192.168.1.1 # Testa a famosa falha Heartbleed
+92. nmap --script smb-vuln-ms17-010 192.168.1.1 # Testa se o Windows é vulnerável ao EternalBlue
+93. nmap --script http-sql-injection 192.168.1.1 # Procura por falhas de SQL Injection simples
+94. nmap --script dns-zone-transfer -p 53 alvo.com # Tenta transferência de zona DNS
+95. nmap --script broadcast-ping 192.168.1.255 # Tenta descobrir hosts via broadcast
+96. nmap --script snmp-brute 192.168.1.1   # Tenta adivinhar strings de comunidade SNMP
+97. nmap --script imap-brute 192.168.1.1   # Força bruta em e-mail IMAP
+98. nmap --script pop3-brute 192.168.1.1   # Força bruta em e-mail POP3
+99. nmap --script smtp-enum-users 192.168.1.1 # Tenta listar usuários de um servidor de e-mail
+100. nmap --help                            # O comando mais importante: abre a ajuda completa
+
