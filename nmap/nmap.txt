@@ -1,3 +1,42 @@
+1 Descorberta de Alvos (Host Discovery)
+
+-sn (ping scan): Não escaneia portas.
+apenas verifica se o dispositivo esta "vivo" na 
+rede. é o mais rapido para mapear WI-fi.
+
+-pn: Pula a descoberta. Trata todos os hosts
+como online (util se o alvo bloqueia Pings/ICMP)
+
+2 Tipos de Scan de Portas 
+
+-sS(TCP SYN): O "scan furtivo". Não
+completa a conexão, por isso é dificide logar. (Requer ROOT ou --unprivileged no Termux).
+
+-sT (TCP Connect): Completa a conexão. é o
+padrão para os usuarios sem root
+
+-sU: Escaneia portas UDP (DNS, DHCP, etc).
+é muito mais lento que o TCP
+
+3 Detecção de informações (Enumeração)
+
+-sV: Detecta a versão do serviço rodando na
+porta ex(ex:Apache 2.4.4.1)
+
+-O: Tenta advinhar o sistema operacional (windowns, linux, IOS)
+
+_A: O "modo agressivo". Ativa -sV -O -sC (scripts) e traceroute de uma so vez.
+
+4 Performace e tempo
+
+-TO a -T5: controla a velocidade -T4 é o
+ ideal para redes modernas; -T1 é para evitar
+ detecção por Firewalls (muito lento)
+
+
+
+ #              Lista abaixo de 100 comandos nmap (comentados)
+
 # ==============================================================================
 # MASTER LIST: 100 COMANDOS NMAP PARA SEGURANÇA E REDES
 # Nota: No Termux/PRoot, adicione sempre '--unprivileged' se não tiver Root.
